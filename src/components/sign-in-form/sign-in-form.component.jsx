@@ -1,6 +1,4 @@
 import "./sign-in-form.styles.scss";
-import Button from "../button/button.component";
-import FormInput from "../form-input/form-input.component";
 
 import { useEffect, useState } from "react";
 import {
@@ -8,8 +6,10 @@ import {
     signInWithGoogleRedirect,
     signInUserWithEmailAndPassword,
     getRedirectResultResponse,
-    createUserDocumentFromAuth,
 } from "../../utils/firebase/firebase.utils";
+
+import Button from "../button/button.component";
+import FormInput from "../form-input/form-input.component";
 
 const defaultFormFields = {
     email: "",
@@ -34,8 +34,9 @@ const SignInForm = () => {
             );
 
             if (!user)
-                alert("user sign in failed, check all fields are provided");
-            else await createUserDocumentFromAuth(user);
+                alert(
+                    "user sign in failed, check that all fields are provided"
+                );
         } catch (error) {
             switch (error.code) {
                 case "auth/wrong-password":
@@ -62,13 +63,11 @@ const SignInForm = () => {
     };
 
     const signInUserWithGooglePopup = async () => {
-        const { user } = await signInWithGooglePopup();
-        await createUserDocumentFromAuth(user);
+        await signInWithGooglePopup();
     };
 
     const signInUserWithGoogleRedirect = async () => {
-        const { user } = await signInWithGoogleRedirect();
-        await createUserDocumentFromAuth(user);
+        await signInWithGoogleRedirect();
     };
 
     return (
