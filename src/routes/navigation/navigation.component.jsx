@@ -1,21 +1,24 @@
 import "./navigation.styles.scss";
 
 import { Outlet, Link } from "react-router-dom";
-import { Fragment, useState, useContext } from "react";
+import { Fragment, useContext } from "react";
 
 import { ReactComponent as CrownLogo } from "../../assets/crown.svg";
+
 import { UserContext } from "../../contexts/user.context";
+import { CartContext } from "../../contexts/cart.context";
+
 import { signOutUser } from "../../utils/firebase/firebase.utils";
+
 import CartIcon from "../../components/cart-icon/cart-icon.component";
 import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component";
 
 const Navigation = () => {
     const { currentUser } = useContext(UserContext);
-    const [displayCartDropdown, setDisplayCartDropwn] = useState(false);
+    const { isCartOpen, setIsCartOpen } = useContext(CartContext);
 
-    const onClickHandler = () => {
-        console.log("mdr");
-        setDisplayCartDropwn(true);
+    const toggle = () => {
+        setIsCartOpen(!isCartOpen);
     };
 
     return (
@@ -38,9 +41,9 @@ const Navigation = () => {
                             SIGN IN
                         </Link>
                     )}
-                    <CartIcon onClick={onClickHandler}></CartIcon>
+                    <CartIcon onClick={toggle}></CartIcon>
                 </div>
-                {displayCartDropdown && <CartDropdown></CartDropdown>}
+                {isCartOpen && <CartDropdown />}
             </div>
             <Outlet></Outlet>
         </Fragment>
