@@ -43,4 +43,14 @@
             border: none;
         }
     }
+
+    &.disabled {
+        color: white;
+        background-color: grayscale($color: #757575);
+
+        &:hover {
+            cursor: default;
+            border: none;
+        }
+    }
 }

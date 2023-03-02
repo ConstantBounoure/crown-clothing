@@ -5,10 +5,13 @@ const BUTTON_TYPE_CLASSES = {
     google: "google-sign-in",
 };
 
-const Button = ({ children, buttonType, ...otherProps }) => {
+const Button = ({ children, buttonType, isDisabled, ...otherProps }) => {
     return (
         <button
-            className={`${BUTTON_TYPE_CLASSES[buttonType]} button-container`}
+            className={`${BUTTON_TYPE_CLASSES[buttonType] ?? "default"} ${
+                isDisabled ? "disabled" : ""
+            } button-container`}
+            disabled={isDisabled}
             {...otherProps}
         >
             {children}
