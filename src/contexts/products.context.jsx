@@ -1,5 +1,9 @@
 import { createContext, useState, useEffect } from "react";
-import SHOP_DATA from "../mock/shop-data.json";
+
+// import { addCollectionAndDocuments } from "../utils/firebase/firebase.utils.js";
+// import SHOP_DATA from "../mock/shop-data.js";
+
+import { getCollectionAndDocuments } from "../utils/firebase/firebase.utils";
 
 export const ProductsContext = createContext({
     products: [],
@@ -10,8 +14,18 @@ export const ProductsProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
     const value = { products, setProducts };
 
+    // pour ajouter une fois à firestore la donnée mockée
+    // useEffect(() => {
+    //     addCollectionAndDocuments("categories", SHOP_DATA);
+    // }, []);
+
     useEffect(() => {
-        setProducts(SHOP_DATA);
+        const getCategoriesMap = async () => {
+            const categoriesMap = await getCollectionAndDocuments("categories");
+            // setProducts(categoriesMap);
+        };
+
+        getCategoriesMap();
     }, []);
 
     return (
