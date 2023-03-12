@@ -1,4 +1,9 @@
-import "./sign-in-form.styles.scss";
+import {
+    SignInContainer,
+    Title,
+    ButtonsContainer,
+    RedirectContainer,
+} from "./sign-in-form.styles";
 
 import { useEffect, useState } from "react";
 import {
@@ -8,7 +13,7 @@ import {
     getRedirectResultResponse,
 } from "../../utils/firebase/firebase.utils";
 
-import Button from "../button/button.component";
+import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
 
 const defaultFormFields = {
@@ -71,8 +76,8 @@ const SignInForm = () => {
     };
 
     return (
-        <div className="sign-in-container">
-            <h2>Already have an account ?</h2>
+        <SignInContainer>
+            <Title>Already have an account ?</Title>
             <span>Sign in with your email and password</span>
 
             <form onSubmit={submitHandler}>
@@ -94,18 +99,18 @@ const SignInForm = () => {
                     value={password}
                 ></FormInput>
 
-                <div className="buttons-container">
+                <ButtonsContainer>
                     <Button type="submit">Sign in</Button>
 
                     <Button
                         type="button" // par défaut de type submit
                         onClick={signInUserWithGooglePopup}
-                        buttonType={"google"}
+                        buttonType={BUTTON_TYPE_CLASSES.google}
                     >
                         Google Sign in
                     </Button>
-                </div>
-                <div className="redirect-container">
+                </ButtonsContainer>
+                <RedirectContainer>
                     <Button
                         type="button" // par défaut de type submit
                         onClick={signInUserWithGoogleRedirect}
@@ -113,9 +118,9 @@ const SignInForm = () => {
                     >
                         Google redirect
                     </Button>
-                </div>
+                </RedirectContainer>
             </form>
-        </div>
+        </SignInContainer>
     );
 };
 

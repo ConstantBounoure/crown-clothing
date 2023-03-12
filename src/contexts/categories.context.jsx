@@ -5,14 +5,14 @@ import { createContext, useState, useEffect } from "react";
 
 import { getCollectionAndDocuments } from "../utils/firebase/firebase.utils";
 
-export const ProductsContext = createContext({
-    products: [],
-    setProducts: () => [],
+export const CategoriesContext = createContext({
+    categories: {},
+    setCategories: () => {},
 });
 
-export const ProductsProvider = ({ children }) => {
-    const [products, setProducts] = useState([]);
-    const value = { products, setProducts };
+export const CategoriesProvider = ({ children }) => {
+    const [categories, setCategories] = useState({});
+    const value = { categories, setCategories };
 
     // pour ajouter une fois à firestore la donnée mockée
     // useEffect(() => {
@@ -22,15 +22,15 @@ export const ProductsProvider = ({ children }) => {
     useEffect(() => {
         const getCategoriesMap = async () => {
             const categoriesMap = await getCollectionAndDocuments("categories");
-            // setProducts(categoriesMap);
+            setCategories(categoriesMap);
         };
 
         getCategoriesMap();
     }, []);
 
     return (
-        <ProductsContext.Provider value={value}>
+        <CategoriesContext.Provider value={value}>
             {children}
-        </ProductsContext.Provider>
+        </CategoriesContext.Provider>
     );
 };

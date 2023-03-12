@@ -1,4 +1,4 @@
-import "./checkout-total.styles.scss";
+import { CheckoutTotalContainer } from "./checkout-total.styles";
 
 import { useContext } from "react";
 
@@ -8,9 +8,9 @@ const CheckoutTotal = () => {
     const { cartItemsTotalPrice } = useContext(CartContext);
 
     return (
-        <div className="checkout-total-container">
+        <CheckoutTotalContainer>
             <span>TOTAL: ${cartItemsTotalPrice}</span>
-        </div>
+        </CheckoutTotalContainer>
     );
 };
 

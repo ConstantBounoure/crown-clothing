@@ -1,6 +1,10 @@
-import "./cart-dropdown.styles.scss";
+import {
+    CartDropdownContainer,
+    CartItems,
+    EmptyMessage,
+} from "./cart-dropdown.styles";
 
-import Button from "../button/button.component";
+import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import CartItem from "../cart-item/cart-item.component";
 import { CartContext } from "../../contexts/cart.context";
 import { useNavigate } from "react-router-dom";
@@ -12,23 +16,39 @@ const CartDropdown = () => {
     const { cartItems, cartItemsCount, setIsCartOpen } =
         useContext(CartContext);
 
+    const isDisabled = !cartItemsCount;
+    const buttonType = isDisabled
+        ? BUTTON_TYPE_CLASSES.disabled
+        : BUTTON_TYPE_CLASSES.base;
+
     const goToCheckoutHandler = () => {
         setIsCartOpen(false);
         navigate("/checkout");
     };
 
     return (
-        <div className="cart-dropdown-container">
-            <div className="cart-items">
-                {Object.values(cartItems).map((cartItem) => (
-                    <CartItem key={cartItem.id} cartItem={cartItem}></CartItem>
-                ))}
-            </div>
+        <CartDropdownContainer>
+            <CartItems>
+                {isDisabled ? (
+                    <EmptyMessage>Your cart is empty</EmptyMessage>
+                ) : (
+                    Object.values(cartItems).map((cartItem) => (
+                        <CartItem
+                            key={cartItem.id}
+                            cartItem={cartItem}
+                        ></CartItem>
+                    ))
+                )}
+            </CartItems>
 
-            <Button onClick={goToCheckoutHandler} isDisabled={!cartItemsCount}>
+            <Button
+                buttonType={buttonType}
+                onClick={goToCheckoutHandler}
+                isDisabled={isDisabled}
+            >
                 GO TO CHECKOUT
             </Button>
-        </div>
+        </CartDropdownContainer>
     );
 };
 

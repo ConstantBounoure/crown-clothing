@@ -1,4 +1,8 @@
-import "./checkout-table.styles.scss";
+import {
+    CheckoutTableContainer,
+    CheckoutHeaders,
+    CheckoutHeader,
+} from "./checkout-table.styles";
 
 import { useContext } from "react";
 
@@ -10,32 +14,32 @@ const CheckoutTable = () => {
     const { cartItems } = useContext(CartContext);
 
     return (
-        <div className="checkout-table-container">
-            <div className="checkout-headers">
-                <div className="checkout-header">
+        <CheckoutTableContainer>
+            <CheckoutHeaders>
+                <CheckoutHeader>
                     <span>Product</span>
-                </div>
-                <div className="checkout-header">
+                </CheckoutHeader>
+                <CheckoutHeader>
                     <span>Description</span>
-                </div>
+                </CheckoutHeader>
 
-                <div className="checkout-header">
+                <CheckoutHeader>
                     <span>Quantity</span>
-                </div>
-                <div className="checkout-header">
+                </CheckoutHeader>
+                <CheckoutHeader>
                     <span>Price/u</span>
-                </div>
-                <div className="checkout-header">
+                </CheckoutHeader>
+                <CheckoutHeader>
                     <span>Remove</span>
-                </div>
-            </div>
+                </CheckoutHeader>
+            </CheckoutHeaders>
 
             {Object.values(cartItems).map((item) => (
                 <CheckoutItem key={item.id} item={item} />
             ))}
 
             <CheckoutTotal />
-        </div>
+        </CheckoutTableContainer>
     );
 };
 
