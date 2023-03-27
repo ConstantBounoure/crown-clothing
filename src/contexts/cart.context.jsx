@@ -1,7 +1,57 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useReducer } from "react";
 
 const getNewCartObject = (cartItems) => {
     return Object.assign({}, cartItems);
+};
+
+export const CART_REDUCER_ACTION_TYPES = {
+    SET_IS_CART_OPEN: "SET_IS_CART_OPEN",
+    SET_CART_ITEMS_COUNT: "SET_CART_ITEMS_COUNT",
+    ADD_ITEM_TO_CART: "ADD_ITEM_TO_CART",
+    POP_ITEM_FROM_CART: "POP_ITEM_FROM_CART",
+    REMOVE_ITEM_FROM_CART: "REMOVE_ITEM_FROM_CART",
+};
+
+export const cartReducer = (state, action) => {
+    const { type, payload } = action;
+
+    switch (type) {
+        case CART_REDUCER_ACTION_TYPES.SET_IS_CART_OPEN:
+            return {
+                ...state,
+                isCartOpen: payload.isCartOpen,
+            };
+        case CART_REDUCER_ACTION_TYPES.SET_CART_ITEMS_COUNT:
+            return {
+                ...state,
+                cartItemsCount: payload.cartItemsCount,
+            };
+        case CART_REDUCER_ACTION_TYPES.ADD_ITEM_TO_CART:
+            return {
+                ...state,
+                cartItemsCount: payload.cartItemsCount,
+            };
+        case CART_REDUCER_ACTION_TYPES.POP_ITEM_FROM_CART:
+            return {
+                ...state,
+                cartItemsCount: payload.cartItemsCount,
+            };
+        case CART_REDUCER_ACTION_TYPES.REMOVE_ITEM_FROM_CART:
+            return {
+                ...state,
+                cartItemsCount: payload.cartItemsCount,
+            };
+
+        default:
+            throw new Error(`Unhandled type ${type} in cart reducer`);
+    }
+};
+
+export const INITIAL_CART_REDUCER_STATE = {
+    cartItems: {},
+    isCartOpen: false,
+    cartItemsCount: 0,
+    cartItemsTotalPrice: 0,
 };
 
 export const CartContext = createContext({

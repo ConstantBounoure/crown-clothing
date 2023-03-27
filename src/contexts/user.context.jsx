@@ -7,22 +7,36 @@ export const UserContext = createContext({
     setCurrentUser: () => null,
 });
 
-// const userReducer = (state, action) => {
-//     const { type, payload } = action;
+export const USER_ACTION_TYPES = {
+    SET_CURRENT_USER: "SET_CURRENT_USER",
+};
 
-//     switch (type) {
-//         case "SET_CURRENT_USER":
-//             return { ...state, currentUser: payload };
+export const INITIAL_USER_REDUCER_STATE = {
+    currentUser: null,
+};
 
-//         default:
-//             throw new Error(`Unhandled type ${type} in userReducer`);
-//     }
+const userReducer = (state, action) => {
+    const { type, payload } = action;
 
-//     return {};
-// };
+    switch (type) {
+        case USER_ACTION_TYPES.SET_CURRENT_USER:
+            return { ...state, currentUser: payload };
+
+        default:
+            throw new Error(`Unhandled type ${type} in userReducer`);
+    }
+};
 
 export const UserProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState(null);
+    // const [currentUser, setCurrentUser] = useState(null);
+    const [state, dispatch] = useReducer(
+        userReducer,
+        INITIAL_USER_REDUCER_STATE
+    );
+    const { currentUser } = state;
+    const setCurrentUser = (user) => {
+        dispatch({ type: USER_ACTION_TYPES.SET_CURRENT_USER, payload: user });
+    };
     const value = { currentUser, setCurrentUser };
 
     useEffect(() => {
