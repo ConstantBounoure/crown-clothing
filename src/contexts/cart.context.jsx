@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useReducer } from "react";
+import { createContext, useReducer } from "react";
 
 const getNewCartObject = (cartItems) => {
     return Object.assign({}, cartItems);
@@ -6,10 +6,7 @@ const getNewCartObject = (cartItems) => {
 
 export const CART_REDUCER_ACTION_TYPES = {
     SET_IS_CART_OPEN: "SET_IS_CART_OPEN",
-    SET_CART_ITEMS_COUNT: "SET_CART_ITEMS_COUNT",
-    ADD_ITEM_TO_CART: "ADD_ITEM_TO_CART",
-    POP_ITEM_FROM_CART: "POP_ITEM_FROM_CART",
-    REMOVE_ITEM_FROM_CART: "REMOVE_ITEM_FROM_CART",
+    SET_CART_ITEMS: "SET_CART_ITEMS",
 };
 
 export const cartReducer = (state, action) => {
@@ -21,25 +18,10 @@ export const cartReducer = (state, action) => {
                 ...state,
                 isCartOpen: payload.isCartOpen,
             };
-        case CART_REDUCER_ACTION_TYPES.SET_CART_ITEMS_COUNT:
+        case CART_REDUCER_ACTION_TYPES.SET_CART_ITEMS:
             return {
                 ...state,
-                cartItemsCount: payload.cartItemsCount,
-            };
-        case CART_REDUCER_ACTION_TYPES.ADD_ITEM_TO_CART:
-            return {
-                ...state,
-                cartItemsCount: payload.cartItemsCount,
-            };
-        case CART_REDUCER_ACTION_TYPES.POP_ITEM_FROM_CART:
-            return {
-                ...state,
-                cartItemsCount: payload.cartItemsCount,
-            };
-        case CART_REDUCER_ACTION_TYPES.REMOVE_ITEM_FROM_CART:
-            return {
-                ...state,
-                cartItemsCount: payload.cartItemsCount,
+                ...payload,
             };
 
         default:
@@ -67,31 +49,44 @@ export const CartContext = createContext({
 });
 
 export const CartProvider = ({ children }) => {
-    const [cartItems, setCartItems] = useState({});
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const [cartItemsCount, setCartItemsCount] = useState(0);
-    const [cartItemsTotalPrice, setCartItemsTotalPrice] = useState(0);
+    const [state, dispatch] = useReducer(
+        cartReducer,
+        INITIAL_CART_REDUCER_STATE
+    );
+    const { cartItems, isCartOpen, cartItemsCount, cartItemsTotalPrice } =
+        state;
 
-    useEffect(() => {
-        const numberOfItemsInCart = Object.values(cartItems).reduce(
-            (acc, item) => acc + item.quantity,
-            0
-        );
+    const setIsCartOpen = (isCartOpen) => {
+        dispatch({
+            type: CART_REDUCER_ACTION_TYPES.SET_IS_CART_OPEN,
+            payload: { isCartOpen },
+        });
+    };
 
-        setCartItemsCount(numberOfItemsInCart);
-    }, [cartItems]);
-
-    useEffect(() => {
-        const totalPrice = Object.values(cartItems).reduce(
+    const updateCartItemsReducer = (newCartItems) => {
+        const newTotalPrice = Object.values(newCartItems).reduce(
             (acc, item) => acc + item.price * item.quantity,
             0
         );
 
-        setCartItemsTotalPrice(totalPrice);
-    }, [cartItems]);
+        const newNumberOfItemsInCart = Object.values(newCartItems).reduce(
+            (acc, item) => acc + item.quantity,
+            0
+        );
+
+        dispatch({
+            type: CART_REDUCER_ACTION_TYPES.SET_CART_ITEMS,
+            payload: {
+                cartItems: newCartItems,
+                cartItemsCount: newNumberOfItemsInCart,
+                cartItemsTotalPrice: newTotalPrice,
+            },
+        });
+    };
 
     const addItemToCart = (item) => {
         const { id } = item;
+        const { cartItems } = state;
 
         if (id in cartItems) {
             cartItems[id].quantity += 1;
@@ -99,18 +94,20 @@ export const CartProvider = ({ children }) => {
             cartItems[id] = { ...item, quantity: 1 };
         }
 
-        setCartItems(getNewCartObject(cartItems));
+        updateCartItemsReducer(getNewCartObject(cartItems));
     };
 
     const removeItemFromCart = (item) => {
         const { id } = item;
+        const { cartItems } = state;
 
         delete cartItems[id];
-        setCartItems(getNewCartObject(cartItems));
+        updateCartItemsReducer(getNewCartObject(cartItems));
     };
 
     const popItemFromCart = (item) => {
         const { id } = item;
+        const { cartItems } = state;
 
         if (id in cartItems) {
             if (cartItems[id].quantity === 1) {
@@ -120,7 +117,7 @@ export const CartProvider = ({ children }) => {
             }
         }
 
-        setCartItems(getNewCartObject(cartItems));
+        updateCartItemsReducer(getNewCartObject(cartItems));
     };
 
     const value = {
